@@ -178,8 +178,7 @@ export const DEFAULT_CONTENT: ContentConfig = {
     headline: 'Sua beleza, no seu melhor momento.',
     subheadline:
       'Unhas, sobrancelhas, cílios, maquiagem e estética em um só lugar — com as profissionais que já conhecem o seu estilo.',
-    imageUrl:
-      'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?auto=format&fit=crop&w=1600&q=80',
+    imageUrl: '/media/hero-home.jpg',
     ctaPrimary: 'Agendar horário',
     ctaSecondary: 'Falar com a equipe',
   },
@@ -193,8 +192,7 @@ export const DEFAULT_CONTENT: ContentConfig = {
     eyebrow: 'O estúdio',
     title: 'Um lugar pensado para o seu tempo',
     body: 'Nascemos com uma ideia simples: reunir, em um só endereço, as profissionais que cuidam de cada detalhe da sua rotina de beleza. Aqui a sua ficha acompanha você — a técnica das suas unhas, o formato da sua sobrancelha, o tom que combina com a sua pele. Você não precisa explicar tudo de novo a cada visita.',
-    imageUrl:
-      'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: '/media/sobre-estudio.jpg',
     signature: 'Equipe Lumi',
   },
   editorial: {
@@ -202,10 +200,8 @@ export const DEFAULT_CONTENT: ContentConfig = {
     author: 'Lumi Beauty Studio',
   },
   bridal: {
-    heroImageUrl:
-      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=1800&q=80',
-    sectionImageUrl:
-      'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80',
+    heroImageUrl: '/media/noivas-hero.jpg',
+    sectionImageUrl: '/media/home-noivas.jpg',
   },
   faq: [
     {

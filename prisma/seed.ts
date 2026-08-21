@@ -41,8 +41,7 @@ function businessDay(offset: number): Date {
   return d;
 }
 
-const img = (id: string, w = 900) =>
-  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
+const img = (file: string) => `/media/${file}`;
 
 async function main() {
   console.log('› limpando base…');
@@ -106,7 +105,7 @@ async function main() {
       state: 'SP',
       zip: '01304-001',
       phone: '(11) 3555-1200',
-      imageUrl: img('1521590832167-7bcbfaa6381f'),
+      imageUrl: img('unidade-centro.jpg'),
       sortOrder: 0,
       notes: 'Estacionamento conveniado no número 1.400.',
     },
@@ -122,7 +121,7 @@ async function main() {
       state: 'SP',
       zip: '01424-001',
       phone: '(11) 3555-1300',
-      imageUrl: img('1600948836101-f9ffda59d250'),
+      imageUrl: img('unidade-jardins.jpg'),
       sortOrder: 1,
       notes: 'Atendimento de noivas e eventos com sala reservada.',
     },
@@ -147,7 +146,7 @@ async function main() {
       slug: 'unhas',
       tagline: 'Manicure, gel, alongamento e nail art',
       description: 'Do clássico bem-feito ao alongamento autoral. Sua técnica e seu formato ficam registrados na ficha.',
-      coverImage: img('1604654894610-df63bc536371'),
+      coverImage: img('categoria-unhas.jpg'),
       sortOrder: 0,
     },
     {
@@ -155,7 +154,7 @@ async function main() {
       slug: 'sobrancelhas',
       tagline: 'Design, henna e laminação',
       description: 'Formato desenhado a partir da sua expressão — e mantido igual a cada visita.',
-      coverImage: img('1613966802194-d46a163af70d'),
+      coverImage: img('categoria-sobrancelhas.jpg'),
       sortOrder: 1,
     },
     {
@@ -163,7 +162,7 @@ async function main() {
       slug: 'cilios',
       tagline: 'Extensão, volume e lash lifting',
       description: 'Curvatura, comprimento e efeito registrados para a manutenção sair idêntica.',
-      coverImage: img('1487412947147-5cebf100ffc2'),
+      coverImage: img('categoria-cilios.jpg'),
       sortOrder: 2,
     },
     {
@@ -171,7 +170,7 @@ async function main() {
       slug: 'maquiagem',
       tagline: 'Social, festa, fotos e noivas',
       description: 'Com fluxo próprio para eventos: você diz a que horas precisa estar pronta e nós montamos o cronograma.',
-      coverImage: img('1596462502278-27bfdc403348'),
+      coverImage: img('categoria-maquiagem.jpg'),
       sortOrder: 3,
     },
     {
@@ -179,7 +178,7 @@ async function main() {
       slug: 'estetica-facial',
       tagline: 'Limpeza, peeling e hidratação',
       description: 'Protocolos de pele com avaliação e recomendação de retorno.',
-      coverImage: img('1570172619644-dfd03ed5d881'),
+      coverImage: img('categoria-estetica-facial.jpg'),
       sortOrder: 4,
     },
     {
@@ -187,7 +186,7 @@ async function main() {
       slug: 'estetica-corporal',
       tagline: 'Massagem, drenagem e spa',
       description: 'Cuidado corporal com sessões avulsas ou em pacote.',
-      coverImage: img('1600334129128-685c5582fd35'),
+      coverImage: img('categoria-estetica-corporal.jpg'),
       sortOrder: 5,
     },
   ];
@@ -217,42 +216,42 @@ async function main() {
 
   const serviceSeeds: ServiceSeed[] = [
     // Unhas
-    { slug: 'manicure-tradicional', name: 'Manicure tradicional', category: 'unhas', price: 3500, duration: 40, returnIntervalDays: 21, recordSchema: 'nail', shortDescription: 'Cutícula, lixamento e esmaltação em esmalte comum.', isFeatured: true, imageUrl: img('1604654894610-df63bc536371') },
+    { slug: 'manicure-tradicional', name: 'Manicure tradicional', category: 'unhas', price: 3500, duration: 40, returnIntervalDays: 21, recordSchema: 'nail', shortDescription: 'Cutícula, lixamento e esmaltação em esmalte comum.', isFeatured: true, imageUrl: img('servico-manicure-tradicional.jpg') },
     { slug: 'pedicure', name: 'Pedicure', category: 'unhas', price: 4000, duration: 45, returnIntervalDays: 30, recordSchema: 'nail', shortDescription: 'Cuidado completo dos pés com esfoliação leve.' },
     { slug: 'manicure-pedicure', name: 'Manicure + Pedicure', category: 'unhas', price: 7000, duration: 80, returnIntervalDays: 25, recordSchema: 'nail', shortDescription: 'Mãos e pés no mesmo atendimento.', isFeatured: true },
-    { slug: 'esmaltacao-gel', name: 'Esmaltação em gel', category: 'unhas', price: 8000, duration: 60, returnIntervalDays: 21, recordSchema: 'nail', shortDescription: 'Brilho e resistência por até três semanas.', isFeatured: true, imageUrl: img('1632345031435-8727f6897d53') },
+    { slug: 'esmaltacao-gel', name: 'Esmaltação em gel', category: 'unhas', price: 8000, duration: 60, returnIntervalDays: 21, recordSchema: 'nail', shortDescription: 'Brilho e resistência por até três semanas.', isFeatured: true, imageUrl: img('servico-esmaltacao-gel.jpg') },
     { slug: 'blindagem', name: 'Blindagem', category: 'unhas', price: 10000, duration: 75, returnIntervalDays: 30, recordSchema: 'nail', shortDescription: 'Reforço da unha natural com acabamento discreto.' },
-    { slug: 'alongamento-gel', name: 'Alongamento em gel', category: 'unhas', price: 15000, duration: 120, priceType: 'FROM', returnIntervalDays: 21, recordSchema: 'nail', shortDescription: 'Extensão em gel com formato desenhado para a sua mão.', isFeatured: true, imageUrl: img('1610992015732-2449b76344bc') },
+    { slug: 'alongamento-gel', name: 'Alongamento em gel', category: 'unhas', price: 15000, duration: 120, priceType: 'FROM', returnIntervalDays: 21, recordSchema: 'nail', shortDescription: 'Extensão em gel com formato desenhado para a sua mão.', isFeatured: true, imageUrl: img('servico-alongamento-gel.jpg') },
     { slug: 'alongamento-fibra', name: 'Alongamento em fibra de vidro', category: 'unhas', price: 18000, duration: 150, priceType: 'FROM', returnIntervalDays: 21, recordSchema: 'nail', shortDescription: 'Leveza e naturalidade para quem usa alongamento no dia a dia.' },
     { slug: 'manutencao-alongamento', name: 'Manutenção de alongamento', category: 'unhas', price: 10000, duration: 90, priceType: 'FROM', returnIntervalDays: 20, recordSchema: 'nail', shortDescription: 'Reequilíbrio do crescimento e troca do acabamento.' },
     { slug: 'remocao', name: 'Remoção', category: 'unhas', price: 4000, duration: 30, recordSchema: 'nail', shortDescription: 'Remoção segura, sem agredir a unha natural.' },
-    { slug: 'nail-art', name: 'Nail Art', category: 'unhas', price: 1500, duration: 15, priceType: 'FROM', recordSchema: 'nail', shortDescription: 'Desenho autoral por unha. Combine com qualquer serviço.', imageUrl: img('1571290274554-6a2eaa771e5f') },
+    { slug: 'nail-art', name: 'Nail Art', category: 'unhas', price: 1500, duration: 15, priceType: 'FROM', recordSchema: 'nail', shortDescription: 'Desenho autoral por unha. Combine com qualquer serviço.', imageUrl: img('servico-nail-art.jpg') },
 
     // Sobrancelhas
-    { slug: 'design-sobrancelhas', name: 'Design de sobrancelhas', category: 'sobrancelhas', price: 3500, duration: 30, returnIntervalDays: 25, recordSchema: 'brow', shortDescription: 'Mapeamento do formato a partir da sua expressão.', isFeatured: true, imageUrl: img('1613966802194-d46a163af70d') },
+    { slug: 'design-sobrancelhas', name: 'Design de sobrancelhas', category: 'sobrancelhas', price: 3500, duration: 30, returnIntervalDays: 25, recordSchema: 'brow', shortDescription: 'Mapeamento do formato a partir da sua expressão.', isFeatured: true, imageUrl: img('servico-design-sobrancelhas.jpg') },
     { slug: 'design-henna', name: 'Design + Henna', category: 'sobrancelhas', price: 5500, duration: 40, returnIntervalDays: 25, recordSchema: 'brow', shortDescription: 'Preenchimento com henna na cor combinada com você.', isFeatured: true },
-    { slug: 'brow-lamination', name: 'Brow Lamination', category: 'sobrancelhas', price: 10000, duration: 60, returnIntervalDays: 45, recordSchema: 'brow', shortDescription: 'Fios alinhados e efeito volumoso por semanas.', imageUrl: img('1613966802194-d46a163af70d') },
+    { slug: 'brow-lamination', name: 'Brow Lamination', category: 'sobrancelhas', price: 10000, duration: 60, returnIntervalDays: 45, recordSchema: 'brow', shortDescription: 'Fios alinhados e efeito volumoso por semanas.', imageUrl: img('servico-brow-lamination.jpg') },
     { slug: 'tintura-sobrancelha', name: 'Tintura', category: 'sobrancelhas', price: 4500, duration: 30, returnIntervalDays: 30, recordSchema: 'brow', shortDescription: 'Uniformiza a cor dos fios com resultado natural.' },
     { slug: 'brow-spa', name: 'Brow Spa', category: 'sobrancelhas', price: 8000, duration: 50, returnIntervalDays: 30, recordSchema: 'brow', shortDescription: 'Design, esfoliação, hidratação e finalização.' },
 
     // Cílios
-    { slug: 'extensao-classica', name: 'Extensão clássica', category: 'cilios', price: 16000, duration: 120, returnIntervalDays: 21, recordSchema: 'lash', requiresPatchTest: true, shortDescription: 'Um fio por cílio natural. Resultado discreto e elegante.', isFeatured: true, imageUrl: img('1487412947147-5cebf100ffc2') },
+    { slug: 'extensao-classica', name: 'Extensão clássica', category: 'cilios', price: 16000, duration: 120, returnIntervalDays: 21, recordSchema: 'lash', requiresPatchTest: true, shortDescription: 'Um fio por cílio natural. Resultado discreto e elegante.', isFeatured: true, imageUrl: img('servico-extensao-classica.jpg') },
     { slug: 'volume-brasileiro', name: 'Volume brasileiro', category: 'cilios', price: 18000, duration: 150, returnIntervalDays: 21, recordSchema: 'lash', requiresPatchTest: true, shortDescription: 'Fios em Y para densidade sem peso.' },
     { slug: 'volume-russo', name: 'Volume russo', category: 'cilios', price: 22000, duration: 180, returnIntervalDays: 21, recordSchema: 'lash', requiresPatchTest: true, shortDescription: 'Máximo volume com fios ultrafinos.' },
     { slug: 'manutencao-cilios', name: 'Manutenção de cílios', category: 'cilios', price: 10000, duration: 90, priceType: 'FROM', returnIntervalDays: 21, recordSchema: 'lash', shortDescription: 'Reposição dos fios mantendo o mesmo mapa.' },
     { slug: 'lash-lifting', name: 'Lash Lifting', category: 'cilios', price: 12000, duration: 60, returnIntervalDays: 45, recordSchema: 'lash', shortDescription: 'Curvatura nos seus próprios cílios, sem extensão.', isFeatured: true },
 
     // Maquiagem
-    { slug: 'maquiagem-social', name: 'Maquiagem social', category: 'maquiagem', price: 18000, duration: 90, recordSchema: 'makeup', shortDescription: 'Para jantares, reuniões e compromissos do dia.', isFeatured: true, imageUrl: img('1596462502278-27bfdc403348') },
+    { slug: 'maquiagem-social', name: 'Maquiagem social', category: 'maquiagem', price: 18000, duration: 90, recordSchema: 'makeup', shortDescription: 'Para jantares, reuniões e compromissos do dia.', isFeatured: true, imageUrl: img('servico-maquiagem-social.jpg') },
     { slug: 'maquiagem-festa', name: 'Maquiagem para festa', category: 'maquiagem', price: 22000, duration: 120, recordSchema: 'makeup', shortDescription: 'Alta fixação para a noite inteira.', isFeatured: true },
     { slug: 'maquiagem-express', name: 'Maquiagem express', category: 'maquiagem', price: 12000, duration: 60, recordSchema: 'makeup', shortDescription: 'Produção rápida quando o tempo é curto.' },
     { slug: 'maquiagem-fotos', name: 'Maquiagem para fotos', category: 'maquiagem', price: 20000, duration: 90, recordSchema: 'makeup', shortDescription: 'Ajustada para luz de estúdio e câmera.' },
-    { slug: 'maquiagem-noiva', name: 'Maquiagem para noiva', category: 'maquiagem', price: 45000, duration: 150, priceType: 'FROM', recordSchema: 'makeup', shortDescription: 'No dia do casamento, com acompanhamento e retoque.', isFeatured: true, imageUrl: img('1595777457583-95e059d581b8') },
+    { slug: 'maquiagem-noiva', name: 'Maquiagem para noiva', category: 'maquiagem', price: 45000, duration: 150, priceType: 'FROM', recordSchema: 'makeup', shortDescription: 'No dia do casamento, com acompanhamento e retoque.', isFeatured: true, imageUrl: img('servico-maquiagem-noiva.jpg') },
     { slug: 'teste-noiva', name: 'Teste de maquiagem para noiva', category: 'maquiagem', price: 25000, duration: 120, priceType: 'FROM', recordSchema: 'makeup', shortDescription: 'Definimos o visual antes da data, com registro na ficha.' },
     { slug: 'maquiagem-cabelo', name: 'Maquiagem + cabelo', category: 'maquiagem', price: 35000, duration: 180, priceType: 'FROM', recordSchema: 'makeup', shortDescription: 'Produção completa para eventos.' },
 
     // Estética facial
-    { slug: 'limpeza-pele', name: 'Limpeza de pele', category: 'estetica-facial', price: 12000, duration: 60, returnIntervalDays: 30, recordSchema: 'skin', shortDescription: 'Higienização profunda com extração.', isFeatured: true, imageUrl: img('1570172619644-dfd03ed5d881') },
+    { slug: 'limpeza-pele', name: 'Limpeza de pele', category: 'estetica-facial', price: 12000, duration: 60, returnIntervalDays: 30, recordSchema: 'skin', shortDescription: 'Higienização profunda com extração.', isFeatured: true, imageUrl: img('servico-limpeza-pele.jpg') },
     { slug: 'limpeza-premium', name: 'Limpeza premium', category: 'estetica-facial', price: 18000, duration: 90, returnIntervalDays: 30, recordSchema: 'skin', shortDescription: 'Protocolo estendido com máscara e alta frequência.' },
     { slug: 'peeling', name: 'Peeling', category: 'estetica-facial', price: 15000, duration: 60, priceType: 'FROM', returnIntervalDays: 21, recordSchema: 'skin', shortDescription: 'Renovação celular conforme avaliação da pele.' },
     { slug: 'hidratacao-facial', name: 'Hidratação facial', category: 'estetica-facial', price: 10000, duration: 60, returnIntervalDays: 30, recordSchema: 'skin', shortDescription: 'Reposição de água e barreira cutânea.' },
@@ -304,7 +303,7 @@ async function main() {
       name: 'Helena Lumi',
       phone: '(11) 99900-0001',
       role: 'OWNER',
-      avatarUrl: img('1580489944761-15a19d654956', 400),
+      avatarUrl: img('equipe-ana-ribeiro-avatar.jpg'),
     },
   });
 
@@ -348,8 +347,8 @@ async function main() {
       name: 'Ana Ribeiro',
       title: 'Nail designer',
       bio: 'Trabalha com alongamento há nove anos e é referência em formato amendoado. Gosta de acabamento discreto e durabilidade real.',
-      avatar: img('1544005313-94ddf0286df2', 400),
-      cover: img('1604654894610-df63bc536371'),
+      avatar: img('equipe-ana-ribeiro-avatar.jpg'),
+      cover: img('equipe-ana-ribeiro-capa.jpg'),
       specialties: 'Alongamento em gel,Manutenção,Esmaltação em gel',
       services: ['manicure-tradicional', 'pedicure', 'manicure-pedicure', 'esmaltacao-gel', 'blindagem', 'alongamento-gel', 'alongamento-fibra', 'manutencao-alongamento', 'remocao', 'nail-art'],
       branches: ['centro', 'jardins'],
@@ -361,8 +360,8 @@ async function main() {
       name: 'Bruna Camargo',
       title: 'Manicure e pedicure',
       bio: 'Especialista em pés e mãos bem cuidados. Atendimento calmo, cutícula impecável e conversa boa.',
-      avatar: img('1494790108377-be9c29b29330', 400),
-      cover: img('1632345031435-8727f6897d53'),
+      avatar: img('equipe-bruna-camargo-avatar.jpg'),
+      cover: img('equipe-bruna-camargo-capa.jpg'),
       specialties: 'Manicure,Pedicure,Blindagem',
       services: ['manicure-tradicional', 'pedicure', 'manicure-pedicure', 'esmaltacao-gel', 'blindagem', 'remocao'],
       branches: ['centro'],
@@ -374,8 +373,8 @@ async function main() {
       name: 'Paula Nunes',
       title: 'Nail artist',
       bio: 'Autoral. Cria desenhos exclusivos, do minimalista ao chrome, e adora um projeto difícil.',
-      avatar: img('1534528741775-53994a69daeb', 400),
-      cover: img('1571290274554-6a2eaa771e5f'),
+      avatar: img('equipe-paula-nunes-avatar.jpg'),
+      cover: img('equipe-paula-nunes-capa.jpg'),
       specialties: 'Nail Art,Chrome,Francesinha',
       services: ['manicure-tradicional', 'esmaltacao-gel', 'alongamento-gel', 'manutencao-alongamento', 'nail-art'],
       branches: ['jardins'],
@@ -387,8 +386,8 @@ async function main() {
       name: 'Julia Nakamura',
       title: 'Designer de sobrancelhas',
       bio: 'Mapeia o formato a partir da expressão do rosto. Trabalha com henna e laminação e é obsessiva por simetria.',
-      avatar: img('1517841905240-472988babdf9', 400),
-      cover: img('1613966802194-d46a163af70d'),
+      avatar: img('equipe-julia-nakamura-avatar.jpg'),
+      cover: img('equipe-julia-nakamura-capa.jpg'),
       specialties: 'Design,Henna,Brow Lamination',
       services: ['design-sobrancelhas', 'design-henna', 'brow-lamination', 'tintura-sobrancelha', 'brow-spa'],
       branches: ['centro', 'jardins'],
@@ -400,8 +399,8 @@ async function main() {
       name: 'Larissa Prado',
       title: 'Lash designer',
       bio: 'Volume russo é a assinatura dela. Monta mapas personalizados e registra tudo para a manutenção sair idêntica.',
-      avatar: img('1531123897727-8f129e1688ce', 400),
-      cover: img('1487412947147-5cebf100ffc2'),
+      avatar: img('equipe-larissa-prado-avatar.jpg'),
+      cover: img('equipe-larissa-prado-capa.jpg'),
       specialties: 'Volume russo,Extensão clássica,Lash Lifting',
       services: ['extensao-classica', 'volume-brasileiro', 'volume-russo', 'manutencao-cilios', 'lash-lifting'],
       branches: ['centro'],
@@ -413,8 +412,8 @@ async function main() {
       name: 'Carla Meireles',
       title: 'Maquiadora',
       bio: 'Pele leve e luminosa, do social ao editorial. Trabalha com referências enviadas pela cliente antes do atendimento.',
-      avatar: img('1487412720507-e7ab37603c6f', 400),
-      cover: img('1596462502278-27bfdc403348'),
+      avatar: img('equipe-carla-meireles-avatar.jpg'),
+      cover: img('equipe-carla-meireles-capa.jpg'),
       specialties: 'Maquiagem social,Festa,Fotos',
       services: ['maquiagem-social', 'maquiagem-festa', 'maquiagem-express', 'maquiagem-fotos'],
       branches: ['centro', 'jardins'],
@@ -426,8 +425,8 @@ async function main() {
       name: 'Sofia Duarte',
       title: 'Maquiadora — noivas e eventos',
       bio: 'Conduz casamentos de ponta a ponta: teste, cronograma do dia e produção da noiva e das madrinhas.',
-      avatar: img('1573496359142-b8d87734a5a2', 400),
-      cover: img('1595777457583-95e059d581b8'),
+      avatar: img('equipe-sofia-duarte-avatar.jpg'),
+      cover: img('equipe-sofia-duarte-capa.jpg'),
       specialties: 'Noivas,Eventos,Maquiagem + cabelo',
       services: ['maquiagem-noiva', 'teste-noiva', 'maquiagem-cabelo', 'maquiagem-festa', 'maquiagem-social'],
       branches: ['jardins'],
@@ -439,8 +438,8 @@ async function main() {
       name: 'Renata Alves',
       title: 'Esteticista',
       bio: 'Avalia a pele antes de qualquer protocolo e monta um plano de retorno realista para a rotina da cliente.',
-      avatar: img('1508214751196-bcfd4ca60f91', 400),
-      cover: img('1570172619644-dfd03ed5d881'),
+      avatar: img('equipe-renata-alves-avatar.jpg'),
+      cover: img('equipe-renata-alves-capa.jpg'),
       specialties: 'Limpeza de pele,Peeling,Drenagem',
       services: ['limpeza-pele', 'limpeza-premium', 'peeling', 'hidratacao-facial', 'spa-facial', 'massagem-relaxante', 'drenagem', 'massagem-modeladora', 'spa-corporal'],
       branches: ['centro', 'jardins'],
@@ -523,51 +522,51 @@ async function main() {
       name: 'Beauty Day', slug: 'beauty-day', price: 12000, sessions: 1, isCombo: true, highlight: true,
       tagline: 'Manicure + Pedicure + Sobrancelha',
       description: 'Três serviços em sequência, no mesmo dia, com o roteiro montado para você.',
-      imageUrl: img('1600948836101-f9ffda59d250'),
+      imageUrl: img('pacote-beauty-day.jpg'),
       items: [['manicure-tradicional', 1], ['pedicure', 1], ['design-sobrancelhas', 1]] as [string, number][],
     },
     {
       name: 'Glow', slug: 'glow', price: 25000, sessions: 1, isCombo: true,
       tagline: 'Limpeza facial + Design + Lash Lifting',
       description: 'Pele limpa, olhar aberto e sobrancelha desenhada — o combo que rende semanas.',
-      imageUrl: img('1570172619644-dfd03ed5d881'),
+      imageUrl: img('pacote-glow.jpg'),
       items: [['limpeza-pele', 1], ['design-sobrancelhas', 1], ['lash-lifting', 1]] as [string, number][],
     },
     {
       name: 'Event Ready', slug: 'event-ready', price: 30000, sessions: 1, isCombo: true, highlight: true,
       tagline: 'Manicure + Sobrancelha + Maquiagem',
       description: 'Tudo o que você precisa antes de um evento, resolvido em uma tarde.',
-      imageUrl: img('1596462502278-27bfdc403348'),
+      imageUrl: img('pacote-event-ready.jpg'),
       items: [['manicure-tradicional', 1], ['design-sobrancelhas', 1], ['maquiagem-festa', 1]] as [string, number][],
     },
     {
       name: 'Bridal Experience', slug: 'bridal-experience', price: 70000, sessions: 1, isCombo: true, highlight: true,
       tagline: 'Teste + Maquiagem no dia + Preparação de pele',
       description: 'O essencial do casamento em um pacote fechado, com teste incluído.',
-      imageUrl: img('1595777457583-95e059d581b8'),
+      imageUrl: img('pacote-bridal-experience.jpg'),
       items: [['teste-noiva', 1], ['maquiagem-noiva', 1], ['limpeza-premium', 1]] as [string, number][],
     },
     {
       name: 'Bridal Premium', slug: 'bridal-premium', price: 120000, sessions: 1, isCombo: true,
       tagline: 'Teste + Maquiagem + Cabelo + Preparação',
       description: 'Produção completa da noiva, do preparo da pele ao retoque final.',
-      imageUrl: img('1519741497674-611481863552'),
+      imageUrl: img('pacote-bridal-premium.jpg'),
       items: [['teste-noiva', 1], ['maquiagem-cabelo', 1], ['limpeza-premium', 1], ['design-henna', 1]] as [string, number][],
     },
     {
       name: 'Nail Package', slug: 'nail-package', price: 15000, sessions: 5, service: 'manicure-tradicional',
       tagline: '5 manicures', description: 'Sua manutenção do mês resolvida, com desconto por sessão.',
-      imageUrl: img('1604654894610-df63bc536371'), items: [] as [string, number][],
+      imageUrl: img('pacote-nail-package.jpg'), items: [] as [string, number][],
     },
     {
       name: 'Brow Package', slug: 'brow-package', price: 12000, sessions: 4, service: 'design-sobrancelhas',
       tagline: '4 designs', description: 'Quatro manutenções de sobrancelha para usar quando quiser.',
-      imageUrl: img('1613966802194-d46a163af70d'), items: [] as [string, number][],
+      imageUrl: img('pacote-brow-package.jpg'), items: [] as [string, number][],
     },
     {
       name: 'Lash Package', slug: 'lash-package', price: 27000, sessions: 3, service: 'manutencao-cilios',
       tagline: '3 manutenções', description: 'Manutenções de cílios no intervalo recomendado.',
-      imageUrl: img('1487412947147-5cebf100ffc2'), items: [] as [string, number][],
+      imageUrl: img('pacote-lash-package.jpg'), items: [] as [string, number][],
     },
   ];
 
@@ -977,22 +976,22 @@ async function main() {
   // ── portfólio ──────────────────────────────────────────────────────────────
   console.log('› portfólio');
   const portfolioSeeds: { pro: string; service: string; title: string; tags: string; image: string; featured?: boolean }[] = [
-    { pro: 'ana', service: 'alongamento-gel', title: 'Amendoado nude leitoso', tags: 'Alongamento,Minimalista', image: img('1610992015732-2449b76344bc'), featured: true },
-    { pro: 'ana', service: 'esmaltacao-gel', title: 'Gel vermelho clássico', tags: 'Esmaltação,Clássico', image: img('1632345031435-8727f6897d53') },
-    { pro: 'ana', service: 'alongamento-fibra', title: 'Fibra com francesinha fina', tags: 'Alongamento,Francesinha', image: img('1604654894610-df63bc536371'), featured: true },
-    { pro: 'paula', service: 'nail-art', title: 'Chrome espelhado', tags: 'Nail Art,Chrome', image: img('1571290274554-6a2eaa771e5f'), featured: true },
-    { pro: 'paula', service: 'nail-art', title: 'Linhas minimalistas', tags: 'Nail Art,Minimalista', image: img('1607779097040-26e80aa78e66') },
-    { pro: 'paula', service: 'esmaltacao-gel', title: 'Francesinha invertida', tags: 'Francesinha,Nail Art', image: img('1610992015732-2449b76344bc') },
-    { pro: 'bruna', service: 'manicure-pedicure', title: 'Rosa leitoso', tags: 'Minimalista,Clássico', image: img('1604902396830-aca29e19b067') },
-    { pro: 'julia', service: 'design-henna', title: 'Arco suave com henna', tags: 'Sobrancelhas,Henna', image: img('1613966802194-d46a163af70d'), featured: true },
-    { pro: 'julia', service: 'brow-lamination', title: 'Laminação efeito volume', tags: 'Sobrancelhas,Laminação', image: img('1616683693504-3ea7e9ad6fec') },
-    { pro: 'larissa', service: 'volume-russo', title: 'Volume russo 4D', tags: 'Cílios,Volume', image: img('1487412947147-5cebf100ffc2'), featured: true },
-    { pro: 'larissa', service: 'lash-lifting', title: 'Lash lifting natural', tags: 'Cílios,Natural', image: img('1519824145371-296894a0daa9') },
-    { pro: 'carla', service: 'maquiagem-social', title: 'Glow natural', tags: 'Maquiagem,Natural', image: img('1596462502278-27bfdc403348'), featured: true },
-    { pro: 'carla', service: 'maquiagem-festa', title: 'Olhos esfumados', tags: 'Maquiagem,Glam,Festa', image: img('1512496015851-a90fb38ba796') },
-    { pro: 'sofia', service: 'maquiagem-noiva', title: 'Noiva clássica', tags: 'Maquiagem,Noiva', image: img('1595777457583-95e059d581b8'), featured: true },
-    { pro: 'sofia', service: 'maquiagem-cabelo', title: 'Coque baixo e pele luminosa', tags: 'Maquiagem,Noiva,Cabelo', image: img('1519741497674-611481863552') },
-    { pro: 'renata', service: 'limpeza-pele', title: 'Pele renovada', tags: 'Estética,Pele', image: img('1570172619644-dfd03ed5d881') },
+    { pro: 'ana', service: 'alongamento-gel', title: 'Amendoado nude leitoso', tags: 'Alongamento,Minimalista', image: img('portfolio-amendoado-nude-leitoso.jpg'), featured: true },
+    { pro: 'ana', service: 'esmaltacao-gel', title: 'Gel vermelho clássico', tags: 'Esmaltação,Clássico', image: img('portfolio-gel-vermelho-classico.jpg') },
+    { pro: 'ana', service: 'alongamento-fibra', title: 'Fibra com francesinha fina', tags: 'Alongamento,Francesinha', image: img('portfolio-fibra-com-francesinha-fina.jpg'), featured: true },
+    { pro: 'paula', service: 'nail-art', title: 'Chrome espelhado', tags: 'Nail Art,Chrome', image: img('portfolio-chrome-espelhado.jpg'), featured: true },
+    { pro: 'paula', service: 'nail-art', title: 'Linhas minimalistas', tags: 'Nail Art,Minimalista', image: img('portfolio-linhas-minimalistas.jpg') },
+    { pro: 'paula', service: 'esmaltacao-gel', title: 'Francesinha invertida', tags: 'Francesinha,Nail Art', image: img('portfolio-francesinha-invertida.jpg') },
+    { pro: 'bruna', service: 'manicure-pedicure', title: 'Rosa leitoso', tags: 'Minimalista,Clássico', image: img('portfolio-rosa-leitoso.jpg') },
+    { pro: 'julia', service: 'design-henna', title: 'Arco suave com henna', tags: 'Sobrancelhas,Henna', image: img('portfolio-arco-suave-com-henna.jpg'), featured: true },
+    { pro: 'julia', service: 'brow-lamination', title: 'Laminação efeito volume', tags: 'Sobrancelhas,Laminação', image: img('portfolio-laminacao-efeito-volume.jpg') },
+    { pro: 'larissa', service: 'volume-russo', title: 'Volume russo 4D', tags: 'Cílios,Volume', image: img('portfolio-volume-russo-4d.jpg'), featured: true },
+    { pro: 'larissa', service: 'lash-lifting', title: 'Lash lifting natural', tags: 'Cílios,Natural', image: img('portfolio-lash-lifting-natural.jpg') },
+    { pro: 'carla', service: 'maquiagem-social', title: 'Glow natural', tags: 'Maquiagem,Natural', image: img('portfolio-glow-natural.jpg'), featured: true },
+    { pro: 'carla', service: 'maquiagem-festa', title: 'Olhos esfumados', tags: 'Maquiagem,Glam,Festa', image: img('portfolio-olhos-esfumados.jpg') },
+    { pro: 'sofia', service: 'maquiagem-noiva', title: 'Noiva clássica', tags: 'Maquiagem,Noiva', image: img('portfolio-noiva-classica.jpg'), featured: true },
+    { pro: 'sofia', service: 'maquiagem-cabelo', title: 'Coque baixo e pele luminosa', tags: 'Maquiagem,Noiva,Cabelo', image: img('portfolio-coque-baixo-e-pele-luminosa.jpg') },
+    { pro: 'renata', service: 'limpeza-pele', title: 'Pele renovada', tags: 'Estética,Pele', image: img('portfolio-pele-renovada.jpg') },
   ];
 
   const categoryByService: Record<string, string> = {};
@@ -1015,10 +1014,10 @@ async function main() {
 
   await db.inspirationImage.createMany({
     data: [
-      { customerId: customers.maria.id, imageUrl: img('1607779097040-26e80aa78e66'), note: 'Quero algo assim, mas em nude.', categorySlug: 'unhas' },
-      { customerId: customers.maria.id, imageUrl: img('1512496015851-a90fb38ba796'), note: 'Referência para o jantar.', categorySlug: 'maquiagem', sharedWithId: pros.carla.id },
-      { customerId: customers.juliana.id, imageUrl: img('1595777457583-95e059d581b8'), note: 'Pele natural, batom nude rosado.', categorySlug: 'maquiagem', sharedWithId: pros.sofia.id },
-      { customerId: customers.juliana.id, imageUrl: img('1519741497674-611481863552'), note: 'Cabelo preso, mas com movimento.', categorySlug: 'maquiagem', sharedWithId: pros.sofia.id },
+      { customerId: customers.maria.id, imageUrl: img('inspiracao-1.jpg'), note: 'Quero algo assim, mas em nude.', categorySlug: 'unhas' },
+      { customerId: customers.maria.id, imageUrl: img('inspiracao-2.jpg'), note: 'Referência para o jantar.', categorySlug: 'maquiagem', sharedWithId: pros.carla.id },
+      { customerId: customers.juliana.id, imageUrl: img('inspiracao-3.jpg'), note: 'Pele natural, batom nude rosado.', categorySlug: 'maquiagem', sharedWithId: pros.sofia.id },
+      { customerId: customers.juliana.id, imageUrl: img('inspiracao-4.jpg'), note: 'Cabelo preso, mas com movimento.', categorySlug: 'maquiagem', sharedWithId: pros.sofia.id },
     ],
   });
 
