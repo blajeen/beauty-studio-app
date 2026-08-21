@@ -1,0 +1,6 @@
+.shots/
+.next/
+node_modules/
+*.tsbuildinfo
+prisma/*.db
+prisma/*.db-journal
