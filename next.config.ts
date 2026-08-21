@@ -2,6 +2,11 @@ import type { NextConfig } from 'next';
 
 const config: NextConfig = {
   reactStrictMode: true,
+  // The app uses a seeded SQLite database in production. Include it in every
+  // serverless function bundle so Prisma can open it at runtime on Vercel.
+  outputFileTracingIncludes: {
+    '/*': ['./prisma/dev.db'],
+  },
   images: {
     remotePatterns: [{ protocol: 'https', hostname: '**' }],
   },
