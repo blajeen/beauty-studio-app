@@ -192,10 +192,18 @@ async function Categories() {
         {brand.features.packages ? (
           <Link
             href="/pacotes"
-            className="group flex flex-col justify-between rounded-lg bg-accent-soft p-5 transition-colors hover:bg-accent/25"
+            className="group relative flex min-h-[22rem] flex-col justify-between overflow-hidden rounded-lg bg-accent-soft p-5 transition-colors hover:bg-accent/25"
           >
-            <span className="eyebrow">Combinados</span>
-            <span>
+            <SmartImage
+              src="/media/home-pacotes-card.jpg"
+              alt="Kit de beleza e presente para pacotes do estúdio"
+              className="pointer-events-none absolute inset-0"
+              imgClassName="group-hover:scale-[1.03]"
+              priority
+            />
+            <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-accent-soft/20 via-accent-soft/5 to-accent-soft/95" />
+            <span className="relative z-10 eyebrow">Combinados</span>
+            <span className="relative z-10">
               <span className="block font-display text-2xl">Pacotes</span>
               <span className="mt-1.5 block text-[12.5px] leading-relaxed text-ink/65">
                 Vários serviços em uma tarde, com preço fechado.
@@ -214,10 +222,18 @@ async function Categories() {
         {brand.features.events ? (
           <Link
             href="/noivas"
-            className="group flex flex-col justify-between rounded-lg bg-secondary p-5 text-white transition-opacity hover:opacity-95"
+            className="group relative flex min-h-[22rem] flex-col justify-between overflow-hidden rounded-lg bg-secondary p-5 text-white transition-opacity hover:opacity-95"
           >
-            <span className="text-[11px] uppercase tracking-[0.18em] text-white/50">Ocasiões</span>
-            <span>
+            <SmartImage
+              src="/media/home-ocasioes-card.jpg"
+              alt="Preparação de noiva para eventos especiais"
+              className="pointer-events-none absolute inset-0"
+              imgClassName="group-hover:scale-[1.03]"
+              priority
+            />
+            <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-secondary/15 via-secondary/10 to-secondary/95" />
+            <span className="relative z-10 text-[11px] uppercase tracking-[0.18em] text-white/65">Ocasiões</span>
+            <span className="relative z-10">
               <span className="block font-display text-2xl">Noivas &amp; eventos</span>
               <span className="mt-1.5 block text-[12.5px] leading-relaxed text-white/60">
                 Diga a que horas precisa estar pronta. Nós montamos o cronograma.
