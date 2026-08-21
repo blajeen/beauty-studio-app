@@ -1,0 +1,235 @@
+@import 'tailwindcss';
+
+/*
+ * DESIGN TOKENS
+ *
+ * Os valores reais vivem em --brand-* e são injetados em <html> a partir da
+ * configuração do estúdio (white-label). O `inline` faz o Tailwind referenciar
+ * a variável em vez de copiar o valor — trocar a marca troca a interface
+ * inteira sem rebuild.
+ */
+@theme inline {
+  --color-primary: var(--brand-primary);
+  --color-primary-contrast: var(--brand-primary-contrast);
+  --color-secondary: var(--brand-secondary);
+  --color-accent: var(--brand-accent);
+  --color-canvas: var(--brand-bg);
+  --color-surface: var(--brand-surface);
+  --color-ink: var(--brand-fg);
+  --color-muted: var(--brand-muted);
+  --color-line: var(--brand-border);
+  --color-primary-soft: var(--brand-primary-soft);
+  --color-accent-soft: var(--brand-accent-soft);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+
+  --radius-sm: var(--brand-radius-sm);
+  --radius-md: var(--brand-radius-md);
+  --radius-lg: var(--brand-radius-lg);
+  --radius-xl: var(--brand-radius-xl);
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Fallbacks: garantem render correto antes de o layout injetar a marca. */
+:root {
+  --brand-primary: #3b2c28;
+  --brand-primary-contrast: #fbf8f5;
+  --brand-secondary: #1c1512;
+  --brand-accent: #b98a76;
+  --brand-bg: #f7f3ef;
+  --brand-surface: #ffffff;
+  --brand-fg: #241c19;
+  --brand-muted: #8a7c74;
+  --brand-border: #e4dcd4;
+  --brand-primary-soft: rgba(59, 44, 40, 0.08);
+  --brand-accent-soft: rgba(185, 138, 118, 0.14);
+  --brand-overlay: rgba(28, 21, 18, 0.55);
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --brand-radius-sm: 6px;
+  --brand-radius-md: 10px;
+  --brand-radius-lg: 16px;
+  --brand-radius-xl: 24px;
+}
+
+@layer base {
+  * {
+    border-color: var(--brand-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--brand-bg);
+    color: var(--brand-fg);
+    font-family: var(--font-body);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  /*
+   * A tipografia carrega a sofisticação (seção 5): serifada editorial com peso
+   * leve, entrelinha curta e tracking levemente negativo nos tamanhos grandes.
+   */
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: -0.015em;
+    line-height: 1.08;
+    /*
+     * Garamonds trazem algarismos minúsculos por padrão: o "1" fica parecido
+     * com "I" e o "3" desce da linha de base. Em números de agenda e painel
+     * isso vira erro de leitura, então forçamos figuras altas.
+     */
+    font-variant-numeric: lining-nums;
+    font-feature-settings: 'lnum' 1;
+  }
+
+  ::selection {
+    background: var(--brand-accent-soft);
+    color: var(--brand-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  input[type='date'],
+  input[type='time'] {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* Barra de rolagem discreta nos trilhos horizontais. */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Rótulo de seção em versalete — usado em toda a experiência editorial. */
+  .eyebrow {
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--brand-muted);
+  }
+
+  .surface-card {
+    background: var(--brand-surface);
+    border: 1px solid var(--brand-border);
+    border-radius: var(--brand-radius-lg);
+  }
+
+  /* Gradiente que garante leitura do texto sobre fotografia. */
+  .photo-scrim {
+    background: linear-gradient(
+      to top,
+      rgba(20, 14, 12, 0.78) 0%,
+      rgba(20, 14, 12, 0.35) 45%,
+      rgba(20, 14, 12, 0) 100%
+    );
+  }
+
+  .hairline {
+    border-top: 1px solid var(--brand-border);
+  }
+}
+
+@layer utilities {
+  .animate-rise {
+    animation: rise 0.5s var(--ease-out-soft) both;
+  }
+  .animate-fade {
+    animation: fade 0.35s var(--ease-out-soft) both;
+  }
+  .animate-sheet {
+    animation: sheet 0.32s var(--ease-out-soft) both;
+  }
+
+  /* Escalonamento de entrada para grades e listas. */
+  .stagger > * {
+    animation: rise 0.5s var(--ease-out-soft) both;
+  }
+  .stagger > *:nth-child(1) { animation-delay: 0.02s; }
+  .stagger > *:nth-child(2) { animation-delay: 0.06s; }
+  .stagger > *:nth-child(3) { animation-delay: 0.1s; }
+  .stagger > *:nth-child(4) { animation-delay: 0.14s; }
+  .stagger > *:nth-child(5) { animation-delay: 0.18s; }
+  .stagger > *:nth-child(6) { animation-delay: 0.22s; }
+  .stagger > *:nth-child(7) { animation-delay: 0.26s; }
+  .stagger > *:nth-child(8) { animation-delay: 0.3s; }
+
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheet {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

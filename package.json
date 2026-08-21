@@ -1,0 +1,60 @@
+{
+  "name": "beauty-studio-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Beauty Studio App — plataforma white-label premium de agendamento e gestão para estúdios de beleza",
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/db-provider.mjs && prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+    "db:push": "node scripts/db-provider.mjs && prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:reset": "node scripts/db-provider.mjs && prisma db push --force-reset && npm run db:seed",
+    "db:studio": "prisma studio",
+    "setup": "node scripts/db-provider.mjs && prisma generate && prisma db push && npm run db:seed",
+    "test": "tsx --tsconfig tsconfig.test.json --test tests/*.test.ts",
+    "smoke": "tsx --tsconfig tsconfig.test.json scripts/smoke.ts",
+    "shots": "tsx --tsconfig tsconfig.test.json scripts/screenshots.ts",
+    "e2e": "tsx --tsconfig tsconfig.test.json scripts/e2e-booking.ts",
+    "brief": "tsx --tsconfig tsconfig.test.json scripts/image-brief.ts",
+    "db:deploy": "node scripts/db-provider.mjs && prisma db push && npm run db:seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.3.1",
+    "bcryptjs": "^2.4.3",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "jose": "^5.9.6",
+    "lucide-react": "^0.469.0",
+    "next": "15.1.6",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "tailwind-merge": "^2.6.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "postcss": "^8.5.1",
+    "prisma": "^6.3.1",
+    "puppeteer-core": "^23.11.1",
+    "tailwindcss": "^4.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "allowScripts": {
+    "@prisma/client": true,
+    "@prisma/engines": true,
+    "esbuild": true,
+    "prisma": true,
+    "sharp": true
+  }
+}

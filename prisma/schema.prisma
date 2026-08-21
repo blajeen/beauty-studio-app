@@ -1,0 +1,691 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// BEAUTY STUDIO APP — Modelo de dados
+// Base white-label: cada instalação pertence a UM ÚNICO Beauty Studio.
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ── IDENTIDADE & ACESSO ──────────────────────────────────────────────────────
+
+/// role: OWNER | MANAGER | PROFESSIONAL | CUSTOMER | PRODUCT_MANAGER
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         String    @default("CUSTOMER")
+  avatarUrl    String?
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  professional  Professional?
+  customer      Customer?
+  sessions      Session[]
+  notifications Notification[]
+  auditLogs     AuditLog[]
+
+  @@index([role])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  meta      String?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
+// ── ESTRUTURA DO NEGÓCIO ─────────────────────────────────────────────────────
+
+model Branch {
+  id        String  @id @default(cuid())
+  name      String
+  slug      String  @unique
+  address   String
+  district  String?
+  city      String
+  state     String?
+  zip       String?
+  phone     String?
+  mapsUrl   String?
+  imageUrl  String?
+  notes     String?
+  isActive  Boolean @default(true)
+  sortOrder Int     @default(0)
+
+  businessHours BusinessHours[]
+  professionals ProfessionalBranch[]
+  appointments  Appointment[]
+  blockedSlots  BlockedSlot[]
+  hours         ProfessionalHours[]
+}
+
+/// weekday: 0=domingo ... 6=sabado; horarios em "HH:mm"
+model BusinessHours {
+  id        String  @id @default(cuid())
+  branchId  String
+  weekday   Int
+  openTime  String
+  closeTime String
+  isClosed  Boolean @default(false)
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([branchId, weekday])
+}
+
+model ServiceCategory {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  tagline     String?
+  description String?
+  icon        String?
+  coverImage  String?
+  accent      String?
+  sortOrder   Int     @default(0)
+  isActive    Boolean @default(true)
+
+  services  Service[]
+  portfolio PortfolioItem[]
+}
+
+/// priceType: FIXED | FROM | CUSTOM | CONSULTATION
+model Service {
+  id                 String  @id @default(cuid())
+  categoryId         String
+  name               String
+  slug               String  @unique
+  shortDescription   String?
+  description        String?
+  imageUrl           String?
+  priceType          String  @default("FIXED")
+  price              Int     @default(0)
+  duration           Int     @default(60)
+  bufferBefore       Int     @default(0)
+  bufferAfter        Int     @default(10)
+  returnIntervalDays Int?
+  requiresPatchTest  Boolean @default(false)
+  allowsPhotos       Boolean @default(true)
+  recordSchema       String?
+  isFeatured         Boolean @default(false)
+  isActive           Boolean @default(true)
+  sortOrder          Int     @default(0)
+  tags               String?
+
+  category         ServiceCategory       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  professionals    ProfessionalService[]
+  appointmentItems AppointmentItem[]
+  packageItems     PackageItem[]
+  planItems        PlanItem[]
+  portfolio        PortfolioItem[]
+  procedures       ProcedureRecord[]
+  waitlist         WaitlistEntry[]
+  packages         Package[]
+
+  @@index([categoryId])
+}
+
+model Professional {
+  id                String  @id @default(cuid())
+  userId            String  @unique
+  displayName       String
+  title             String?
+  bio               String?
+  avatarUrl         String?
+  coverUrl          String?
+  instagram         String?
+  specialties       String?
+  acceptsNewClients Boolean @default(true)
+  isActive          Boolean @default(true)
+  sortOrder         Int     @default(0)
+
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  branches         ProfessionalBranch[]
+  services         ProfessionalService[]
+  hours            ProfessionalHours[]
+  blockedSlots     BlockedSlot[]
+  portfolio        PortfolioItem[]
+  appointmentItems AppointmentItem[]
+  procedures       ProcedureRecord[]
+  favoritedBy      Customer[]
+  inspirations     InspirationImage[]
+  reviews          Review[]
+  waitlist         WaitlistEntry[]
+}
+
+model ProfessionalBranch {
+  professionalId String
+  branchId       String
+
+  professional Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  branch       Branch       @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@id([professionalId, branchId])
+}
+
+model ProfessionalService {
+  professionalId String
+  serviceId      String
+  customPrice    Int?
+  customDuration Int?
+  isPrimary      Boolean @default(false)
+
+  professional Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  service      Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([professionalId, serviceId])
+  @@index([serviceId])
+}
+
+model ProfessionalHours {
+  id             String  @id @default(cuid())
+  professionalId String
+  branchId       String?
+  weekday        Int
+  startTime      String
+  endTime        String
+  breakStart     String?
+  breakEnd       String?
+  isOff          Boolean @default(false)
+
+  professional Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  branch       Branch?      @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@index([professionalId, weekday])
+}
+
+/// type: BLOCK | BREAK | VACATION | HOLIDAY
+model BlockedSlot {
+  id             String   @id @default(cuid())
+  professionalId String?
+  branchId       String?
+  startAt        DateTime
+  endAt          DateTime
+  reason         String?
+  type           String   @default("BLOCK")
+  createdAt      DateTime @default(now())
+
+  professional Professional? @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  branch       Branch?       @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@index([professionalId, startAt])
+  @@index([startAt, endAt])
+}
+
+// ── CLIENTES ─────────────────────────────────────────────────────────────────
+
+model Customer {
+  id                      String    @id @default(cuid())
+  userId                  String?   @unique
+  name                    String
+  phone                   String
+  email                   String?
+  birthDate               DateTime?
+  notes                   String?
+  tags                    String?
+  consentPhotos           Boolean   @default(false)
+  consentMarketing        Boolean   @default(true)
+  preferredProfessionalId String?
+  firstVisitAt            DateTime?
+  lastVisitAt             DateTime?
+  totalVisits             Int       @default(0)
+  noShowCount             Int       @default(0)
+  cancelCount             Int       @default(0)
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  user                  User?                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  preferredProfessional Professional?        @relation(fields: [preferredProfessionalId], references: [id], onDelete: SetNull)
+  appointments          Appointment[]
+  packages              CustomerPackage[]
+  subscriptions         Subscription[]
+  inspirations          InspirationImage[]
+  procedures            ProcedureRecord[]
+  preferences           CustomerPreference[]
+  events                Event[]
+  participations        EventParticipant[]
+  notifications         Notification[]
+  reviews               Review[]
+  waitlist              WaitlistEntry[]
+  portfolio             PortfolioItem[]
+
+  @@index([phone])
+  @@index([lastVisitAt])
+}
+
+model CustomerPreference {
+  id         String @id @default(cuid())
+  customerId String
+  key        String
+  value      String
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, key])
+}
+
+// ── AGENDAMENTOS ─────────────────────────────────────────────────────────────
+
+/// status: PENDING | CONFIRMED | IN_PROGRESS | COMPLETED | CANCELLED | NO_SHOW
+/// source: APP | ADMIN | WHATSAPP | PRO
+model Appointment {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  customerId    String
+  branchId      String
+  eventId       String?
+  status        String    @default("CONFIRMED")
+  startAt       DateTime
+  endAt         DateTime
+  totalPrice    Int       @default(0)
+  totalDuration Int       @default(0)
+  readyByAt     DateTime?
+  notes         String?
+  internalNotes String?
+  source        String    @default("APP")
+  createdById   String?
+  cancelledAt   DateTime?
+  cancelReason  String?
+  cancelledBy   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  customer Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  branch   Branch            @relation(fields: [branchId], references: [id])
+  event    Event?            @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  items    AppointmentItem[]
+  reviews  Review[]
+
+  @@index([startAt])
+  @@index([customerId, startAt])
+  @@index([branchId, startAt])
+  @@index([status])
+}
+
+model AppointmentItem {
+  id             String   @id @default(cuid())
+  appointmentId  String
+  serviceId      String
+  professionalId String
+  startAt        DateTime
+  endAt          DateTime
+  duration       Int
+  price          Int      @default(0)
+  status         String   @default("CONFIRMED")
+  sortOrder      Int      @default(0)
+  notes          String?
+
+  appointment  Appointment        @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  service      Service            @relation(fields: [serviceId], references: [id])
+  professional Professional       @relation(fields: [professionalId], references: [id])
+  procedure    ProcedureRecord?
+  packageUsage PackageUsage?
+  planUsage    SubscriptionUsage?
+
+  @@index([professionalId, startAt])
+  @@index([appointmentId])
+  @@index([startAt])
+}
+
+// ── EVENTOS & NOIVAS ─────────────────────────────────────────────────────────
+
+/// type: WEDDING | GRADUATION | BIRTHDAY | PARTY | PHOTOSHOOT | CORPORATE | OTHER
+/// status: DRAFT | CONFIRMED | COMPLETED | CANCELLED
+model Event {
+  id          String   @id @default(cuid())
+  customerId  String
+  name        String
+  type        String   @default("OTHER")
+  eventDate   DateTime
+  readyByTime String
+  venue       String?
+  guestCount  Int      @default(1)
+  status      String   @default("DRAFT")
+  notes       String?
+  references  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  customer     Customer           @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+  participants EventParticipant[]
+
+  @@index([eventDate])
+}
+
+model EventParticipant {
+  id         String  @id @default(cuid())
+  eventId    String
+  customerId String?
+  name       String
+  role       String  @default("GUEST")
+  phone      String?
+  notes      String?
+
+  event    Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+}
+
+// ── PACOTES & BEAUTY CLUB ────────────────────────────────────────────────────
+
+model Package {
+  id           String  @id @default(cuid())
+  name         String
+  slug         String  @unique
+  tagline      String?
+  description  String?
+  imageUrl     String?
+  price        Int
+  sessions     Int     @default(1)
+  serviceId    String?
+  validityDays Int     @default(90)
+  isCombo      Boolean @default(false)
+  highlight    Boolean @default(false)
+  isActive     Boolean @default(true)
+  sortOrder    Int     @default(0)
+
+  service   Service?          @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  items     PackageItem[]
+  purchases CustomerPackage[]
+}
+
+model PackageItem {
+  id        String @id @default(cuid())
+  packageId String
+  serviceId String
+  quantity  Int    @default(1)
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
+
+/// status: ACTIVE | EXHAUSTED | EXPIRED | CANCELLED
+model CustomerPackage {
+  id            String   @id @default(cuid())
+  customerId    String
+  packageId     String
+  purchasedAt   DateTime @default(now())
+  expiresAt     DateTime
+  totalSessions Int
+  usedSessions  Int      @default(0)
+  pricePaid     Int      @default(0)
+  status        String   @default("ACTIVE")
+
+  customer Customer       @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  package  Package        @relation(fields: [packageId], references: [id])
+  usages   PackageUsage[]
+
+  @@index([customerId, status])
+}
+
+model PackageUsage {
+  id                String   @id @default(cuid())
+  customerPackageId String
+  appointmentItemId String?  @unique
+  usedAt            DateTime @default(now())
+  note              String?
+
+  customerPackage CustomerPackage  @relation(fields: [customerPackageId], references: [id], onDelete: Cascade)
+  appointmentItem AppointmentItem? @relation(fields: [appointmentItemId], references: [id], onDelete: SetNull)
+}
+
+model Plan {
+  id           String  @id @default(cuid())
+  name         String
+  slug         String  @unique
+  tagline      String?
+  description  String?
+  monthlyPrice Int
+  benefits     String?
+  highlight    Boolean @default(false)
+  isActive     Boolean @default(true)
+  sortOrder    Int     @default(0)
+
+  items         PlanItem[]
+  subscriptions Subscription[]
+}
+
+model PlanItem {
+  id               String @id @default(cuid())
+  planId           String
+  serviceId        String
+  quantityPerCycle Int    @default(1)
+
+  plan    Plan    @relation(fields: [planId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
+
+/// status: ACTIVE | PAUSED | CANCELLED
+model Subscription {
+  id          String    @id @default(cuid())
+  customerId  String
+  planId      String
+  status      String    @default("ACTIVE")
+  startedAt   DateTime  @default(now())
+  cycleStart  DateTime
+  cycleEnd    DateTime
+  cancelledAt DateTime?
+
+  customer Customer            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  plan     Plan                @relation(fields: [planId], references: [id])
+  usages   SubscriptionUsage[]
+
+  @@index([customerId, status])
+}
+
+model SubscriptionUsage {
+  id                String   @id @default(cuid())
+  subscriptionId    String
+  serviceId         String
+  appointmentItemId String?  @unique
+  cycleStart        DateTime
+  usedAt            DateTime @default(now())
+
+  subscription    Subscription     @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  appointmentItem AppointmentItem? @relation(fields: [appointmentItemId], references: [id], onDelete: SetNull)
+
+  @@index([subscriptionId, cycleStart])
+}
+
+// ── PORTFOLIO, INSPIRACAO & HISTORICO ────────────────────────────────────────
+
+/// visibility: PRIVATE | CLIENT_VISIBLE | PUBLIC_PORTFOLIO
+model PortfolioItem {
+  id             String   @id @default(cuid())
+  professionalId String?
+  serviceId      String?
+  categoryId     String?
+  customerId     String?
+  title          String
+  description    String?
+  imageUrl       String
+  technique      String?
+  styleTags      String?
+  visibility     String   @default("PRIVATE")
+  consentGiven   Boolean  @default(false)
+  isFeatured     Boolean  @default(false)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  professional Professional?    @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  service      Service?         @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  category     ServiceCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  customer     Customer?        @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([visibility])
+  @@index([professionalId])
+}
+
+model InspirationImage {
+  id             String   @id @default(cuid())
+  customerId     String
+  imageUrl       String
+  note           String?
+  sourceUrl      String?
+  categorySlug   String?
+  sharedWithId   String?
+  appointmentRef String?
+  createdAt      DateTime @default(now())
+
+  customer   Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  sharedWith Professional? @relation(fields: [sharedWithId], references: [id], onDelete: SetNull)
+
+  @@index([customerId])
+}
+
+/// Ficha tecnica do atendimento — campos por especialidade (nail / brow / lash / makeup / skin)
+model ProcedureRecord {
+  id                String    @id @default(cuid())
+  appointmentItemId String    @unique
+  customerId        String
+  professionalId    String
+  serviceId         String
+  performedAt       DateTime  @default(now())
+  technique         String?
+  shape             String?
+  lengthSpec        String?
+  color             String?
+  style             String?
+  decoration        String?
+  curvature         String?
+  effect            String?
+  volume            String?
+  product           String?
+  materials         String?
+  observations      String?
+  nextRecommendedAt DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  appointmentItem AppointmentItem  @relation(fields: [appointmentItemId], references: [id], onDelete: Cascade)
+  customer        Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  professional    Professional     @relation(fields: [professionalId], references: [id])
+  service         Service          @relation(fields: [serviceId], references: [id])
+  photos          ProcedurePhoto[]
+
+  @@index([customerId, performedAt])
+}
+
+model ProcedurePhoto {
+  id          String   @id @default(cuid())
+  procedureId String
+  imageUrl    String
+  visibility  String   @default("PRIVATE")
+  caption     String?
+  createdAt   DateTime @default(now())
+
+  procedure ProcedureRecord @relation(fields: [procedureId], references: [id], onDelete: Cascade)
+}
+
+// ── RELACIONAMENTO ───────────────────────────────────────────────────────────
+
+/// type: REMINDER | RECURRENCE | CONFIRMATION | CANCELLATION | WAITLIST | OPS
+model Notification {
+  id           String    @id @default(cuid())
+  userId       String?
+  customerId   String?
+  type         String
+  title        String
+  body         String
+  actionUrl    String?
+  audience     String    @default("CUSTOMER")
+  readAt       DateTime?
+  scheduledFor DateTime?
+  sentAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  user     User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([customerId, readAt])
+}
+
+model Review {
+  id             String   @id @default(cuid())
+  customerId     String
+  appointmentId  String?
+  professionalId String?
+  rating         Int
+  comment        String?
+  isPublic       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  customer     Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  appointment  Appointment?  @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  professional Professional? @relation(fields: [professionalId], references: [id], onDelete: SetNull)
+}
+
+/// status: WAITING | NOTIFIED | CONVERTED | EXPIRED
+model WaitlistEntry {
+  id              String    @id @default(cuid())
+  customerId      String
+  serviceId       String?
+  professionalId  String?
+  branchId        String?
+  preferredFrom   DateTime?
+  preferredTo     DateTime?
+  preferredPeriod String?
+  status          String    @default("WAITING")
+  notes           String?
+  createdAt       DateTime  @default(now())
+
+  customer     Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  service      Service?      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  professional Professional? @relation(fields: [professionalId], references: [id], onDelete: SetNull)
+}
+
+// ── WHITE-LABEL: BRANDING & CONTEUDO (draft -> preview -> publish) ───────────
+
+model Setting {
+  key       String   @id
+  published String
+  draft     String?
+  updatedBy String?
+  updatedAt DateTime @updatedAt
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  kind      String   @default("IMAGE")
+  alt       String?
+  width     Int?
+  height    Int?
+  folder    String?
+  createdAt DateTime @default(now())
+}

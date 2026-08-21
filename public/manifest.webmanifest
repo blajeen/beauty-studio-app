@@ -1,0 +1,45 @@
+{
+  "name": "Lumi Beauty Studio",
+  "short_name": "Lumi",
+  "description": "O aplicativo oficial do estúdio: agende unhas, sobrancelhas, cílios, maquiagem e estética.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F7F3EF",
+  "theme_color": "#F7F3EF",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["lifestyle", "health", "beauty"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Agendar horário",
+      "short_name": "Agendar",
+      "url": "/agendar"
+    },
+    {
+      "name": "Meus horários",
+      "short_name": "Horários",
+      "url": "/minha-conta/agendamentos"
+    },
+    {
+      "name": "Portfólio",
+      "short_name": "Portfólio",
+      "url": "/portfolio"
+    }
+  ]
+}
